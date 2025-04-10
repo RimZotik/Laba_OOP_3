@@ -18,4 +18,36 @@ public class Course {
 
     @OneToMany(mappedBy = "course")
     private List<Student> students;
+
+    public Course() {
+    }
+
+    public Course(String title, Teacher teacher) {
+        this.title = title;
+        this.teacher = teacher;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 }

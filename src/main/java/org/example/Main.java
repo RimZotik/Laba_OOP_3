@@ -29,7 +29,7 @@ public class Main {
             System.out.print("Выберите действие: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();  // consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -94,7 +94,7 @@ public class Main {
         }
         System.out.print("Введите ID учителя: ");
         Long teacherId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
 
         Teacher teacher = teacherDAO.findById(teacherId);
         if (teacher == null) {
@@ -118,7 +118,7 @@ public class Main {
         }
         System.out.print("Введите ID учителя: ");
         Long teacherId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
 
         Teacher teacher = teacherDAO.findById(teacherId);
         if (teacher == null) {
@@ -133,7 +133,7 @@ public class Main {
         }
         System.out.print("Введите ID курса: ");
         Long courseId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
 
         Course course = courseDAO.findById(courseId);
         if (course == null) {
@@ -153,7 +153,7 @@ public class Main {
         showAllTeachers();  // Выводим список всех учителей перед изменением
         System.out.print("Введите ID учителя для изменения: ");
         Long teacherId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
         Teacher teacher = teacherDAO.findById(teacherId);
         if (teacher == null) {
             System.out.println("Учитель не найден.");
@@ -169,9 +169,10 @@ public class Main {
 
 
     private static void updateCourse(Scanner scanner) {
+        showAllCourses();
         System.out.print("Введите ID курса для изменения: ");
         Long courseId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
         Course course = courseDAO.findById(courseId);
         if (course == null) {
             System.out.println("Курс не найден.");
@@ -185,7 +186,7 @@ public class Main {
         }
         System.out.print("Введите ID нового учителя: ");
         Long teacherId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
 
         Teacher teacher = teacherDAO.findById(teacherId);
         if (teacher == null) {
@@ -203,9 +204,10 @@ public class Main {
     }
 
     private static void updateStudent(Scanner scanner) {
+        showAllStudents();
         System.out.print("Введите ID студента для изменения: ");
         Long studentId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
         Student student = studentDAO.findById(studentId);
         if (student == null) {
             System.out.println("Студент не найден.");
@@ -223,7 +225,7 @@ public class Main {
         }
         System.out.print("Введите ID нового курса: ");
         Long courseId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
         Course course = courseDAO.findById(courseId);
         if (course == null) {
             System.out.println("Курс не найден.");
@@ -238,7 +240,7 @@ public class Main {
         }
         System.out.print("Введите ID нового учителя: ");
         Long teacherId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
         Teacher teacher = teacherDAO.findById(teacherId);
         if (teacher == null) {
             System.out.println("Учитель не найден.");
@@ -253,14 +255,13 @@ public class Main {
     private static void deleteTeacher(Scanner scanner) {
         System.out.print("Введите ID учителя для удаления: ");
         Long teacherId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
         Teacher teacher = teacherDAO.findById(teacherId);
         if (teacher == null) {
             System.out.println("Учитель не найден.");
             return;
         }
 
-        // Проверяем, есть ли привязанные курсы или студенты, чтобы избежать каскадного удаления
         if (!teacher.getCourses().isEmpty() || !teacher.getStudents().isEmpty()) {
             System.out.println("Невозможно удалить учителя, так как на него есть курсы или студенты.");
             return;
@@ -274,7 +275,7 @@ public class Main {
         showAllCourses();  // Выводим список всех курсов перед удалением
         System.out.print("Введите ID курса для удаления: ");
         Long courseId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
         Course course = courseDAO.findById(courseId);
         if (course == null) {
             System.out.println("Курс не найден.");
@@ -296,7 +297,7 @@ public class Main {
         showAllStudents(); // Выводим список всех студентов перед удалением
         System.out.print("Введите ID студента для удаления: ");
         Long studentId = scanner.nextLong();
-        scanner.nextLine();  // consume newline
+        scanner.nextLine();
         Student student = studentDAO.findById(studentId);
         if (student == null) {
             System.out.println("Студент не найден.");

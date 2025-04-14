@@ -25,6 +25,7 @@ public class Main {
             System.out.println("10. Показать всех учителей");
             System.out.println("11. Показать все курсы");
             System.out.println("12. Показать всех студентов");
+            System.out.println("13. Вывести курсы по ID студента");
             System.out.println("0. Выход");
             System.out.print("Выберите действие: ");
 
@@ -68,6 +69,9 @@ public class Main {
                 case 12:
                     showAllStudents();
                     break;
+                case 13:
+                    showAllCoursesByStudentId();
+                    break;
                 case 0:
                     System.out.println("Выход...");
                     scanner.close();
@@ -77,6 +81,30 @@ public class Main {
             }
         }
     }
+
+    private static void showAllCoursesByStudentId() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Введите ID студента: ");
+        Long studentId = scanner.nextLong();
+        scanner.nextLine();
+
+        Student student = studentDAO.findById(studentId);
+        if (student == null) {
+            System.out.println("Студент не найден.");
+            return;
+        }
+
+        List<Course> courses = student.getCourses();
+        if (courses == null || courses.isEmpty()) {
+            System.out.println("У этого студента нет курсов.");
+        } else {
+            System.out.println("Курсы студента " + student.getName() + ":");
+            for (Course course : courses) {
+                System.out.println(course.getId() + ". " + course.getTitle());
+            }
+        }
+    }
+
 
     private static void addTeacher(Scanner scanner) {
         System.out.print("Введите имя учителя: ");
@@ -126,28 +154,35 @@ public class Main {
             return;
         }
 
-        List<Course> courses = courseDAO.findAll();
-        System.out.println("Выберите курс для студента:");
-        for (Course course : courses) {
+        List<Course> allCourses = courseDAO.findAll();
+        System.out.println("Введите ID курсов для студента через запятую:");
+        for (Course course : allCourses) {
             System.out.println(course.getId() + ". " + course.getTitle());
         }
-        System.out.print("Введите ID курса: ");
-        Long courseId = scanner.nextLong();
-        scanner.nextLine();
-
-        Course course = courseDAO.findById(courseId);
-        if (course == null) {
-            System.out.println("Курс не найден.");
-            return;
+        System.out.print("ID курсов: ");
+        String courseInput = scanner.nextLine();
+        String[] courseIds = courseInput.split(",");
+        List<Course> selectedCourses = new java.util.ArrayList<>();
+        for (String idStr : courseIds) {
+            Long courseId = Long.parseLong(idStr.trim());
+            Course course = courseDAO.findById(courseId);
+            if (course != null) {
+                selectedCourses.add(course);
+            }
         }
 
         System.out.print("Введите имя студента: ");
         String name = scanner.nextLine();
 
-        Student student = new Student(name, teacher, course);
+        Student student = new Student();
+        student.setName(name);
+        student.setTeacher(teacher);
+        student.setCourses(selectedCourses);
+
         studentDAO.save(student);
         System.out.println("Студент добавлен: " + name);
     }
+
 
     private static void updateTeacher(Scanner scanner) {
         showAllTeachers();  // Выводим список всех учителей перед изменением
@@ -218,20 +253,23 @@ public class Main {
         String newName = scanner.nextLine();
         student.setName(newName);
 
-        List<Course> courses = courseDAO.findAll();
-        System.out.println("Выберите новый курс для студента:");
-        for (Course course : courses) {
+        List<Course> allCourses = courseDAO.findAll();
+        System.out.println("Введите ID новых курсов через запятую:");
+        for (Course course : allCourses) {
             System.out.println(course.getId() + ". " + course.getTitle());
         }
-        System.out.print("Введите ID нового курса: ");
-        Long courseId = scanner.nextLong();
-        scanner.nextLine();
-        Course course = courseDAO.findById(courseId);
-        if (course == null) {
-            System.out.println("Курс не найден.");
-            return;
+        System.out.print("ID курсов: ");
+        String courseInput = scanner.nextLine();
+        String[] courseIds = courseInput.split(",");
+        List<Course> selectedCourses = new java.util.ArrayList<>();
+        for (String idStr : courseIds) {
+            Long courseId = Long.parseLong(idStr.trim());
+            Course course = courseDAO.findById(courseId);
+            if (course != null) {
+                selectedCourses.add(course);
+            }
         }
-        student.setCourse(course);
+        student.setCourses(selectedCourses); // <-- вот так теперь устанавливаем
 
         List<Teacher> teachers = teacherDAO.findAll();
         System.out.println("Выберите нового учителя для студента:");
@@ -251,6 +289,7 @@ public class Main {
         studentDAO.update(student);
         System.out.println("Студент обновлен: " + newName);
     }
+
 
     private static void deleteTeacher(Scanner scanner) {
         System.out.print("Введите ID учителя для удаления: ");

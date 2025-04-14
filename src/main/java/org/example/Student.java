@@ -2,6 +2,8 @@ package org.example;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "students")
 public class Student {
@@ -14,17 +16,24 @@ public class Student {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "student_courses",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses;
 
-    public Student() {
+    public List<Course> getCourses() {
+        return courses;
     }
 
-    public Student(String name, Teacher teacher, Course course) {
-        this.name = name;
-        this.teacher = teacher;
-        this.course = course;
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+
+    public Student() {
     }
 
     public Long getId() {
@@ -39,20 +48,12 @@ public class Student {
         return teacher;
     }
 
-    public Course getCourse() {
-        return course;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
     }
 }
 

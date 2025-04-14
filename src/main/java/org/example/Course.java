@@ -16,9 +16,17 @@ public class Course {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @OneToMany(mappedBy = "course")
+    @ManyToMany(mappedBy = "courses")
     private List<Student> students;
 
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+    
     public Course() {
     }
 
@@ -37,10 +45,6 @@ public class Course {
 
     public Teacher getTeacher() {
         return teacher;
-    }
-
-    public List<Student> getStudents() {
-        return students;
     }
 
     public void setTitle(String title) {
